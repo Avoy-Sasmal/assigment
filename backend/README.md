@@ -1,387 +1,178 @@
 # Task Manager Backend API
 
-A RESTful API built with Express.js and MongoDB for managing tasks. This backend provides complete CRUD operations for task management with features like priority levels, due dates, and completion tracking.
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white)](https://jestjs.io/)
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg?style=for-the-badge)](https://opensource.org/licenses/ISC)
+
+A high-performance, RESTful API built with Express.js and MongoDB for mission-critical task management. This backend architecture supports full CRUD operations, advanced task tracking, and automated unit testing, designed with professional standards in mind.
 
 ---
 
-## Table of Contents
+## Technical Stack
 
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Running the Server](#running-the-server)
-- [API Endpoints](#api-endpoints)
-- [Request/Response Examples](#requestresponse-examples)
-- [Project Structure](#project-structure)
-- [Technologies](#technologies)
+- **Runtime Environment:** Node.js
+- **Web Framework:** Express.js (v5.2.1)
+- **Database Engine:** MongoDB with Mongoose ODM (v9.3.3)
+- **Testing Framework:** Jest and Supertest
+- **Configuration Management:** Dotenv
+- **Process Management:** Nodemon (Development only)
 
 ---
 
-## Features
+## Core Features
 
-✅ **Get all tasks** - Retrieve all tasks sorted by creation date  
-✅ **Get task by ID** - Fetch a specific task  
-✅ **Create task** - Add new tasks with title, description, priority, and due date  
-✅ **Update task** - Modify existing tasks  
-✅ **Delete task** - Remove tasks from the database  
-✅ **Task priority levels** - low, medium, high  
-✅ **Task tracking** - Automatic timestamps (createdAt, updatedAt)  
-✅ **Completion status** - Mark tasks as completed or pending  
+- **Resource Management** - Full CRUD capabilities for task entities.
+- **Priority Architecture** - Categorize tasks into low, medium, and high priority levels.
+- **Dynamic Categorization** - Tasks can be tagged as work, personal, shopping, health, or other.
+- **Deadline Management** - Integrated due date tracking for all tasks.
+- **Status Tracking** - Real-time monitoring of task completion status.
+- **Automated Timestamps** - Native MongoDB timestamping for audit trails.
+- **Schema Validation** - Robust server-side validation for data integrity.
+- **Automated Verification** - Comprehensive test suite leveraging Jest and Supertest.
 
 ---
 
-## Prerequisites
+## Quick Start Guide
 
+### Prerequisites
 - Node.js (v14 or higher)
-- npm or yarn
-- MongoDB (local or cloud instance)
-- Postman or any API testing tool
+- MongoDB instance (Local or Atlas)
 
----
+### Installation
 
-## Installation
-
-1. **Navigate to backend directory:**
+1. **Navigate to the backend directory:**
    ```bash
    cd backend
    ```
 
-2. **Install dependencies:**
+2. **Install project dependencies:**
    ```bash
    npm install
    ```
 
-   This will install:
-   - `express` - Web framework
-   - `mongoose` - MongoDB ODM
-   - `dotenv` - Environment variables
-   - `nodemon` - Development server with auto-reload
-
----
-
-## Configuration
-
-1. **Create a `.env` file** in the backend directory:
+3. **Set up environment variables:**
+   Create a `.env` file in the root directory:
    ```env
    PORT=5000
-   MONGODB_URI=mongodb://localhost:27017/task-manager
-   NODE_ENV=development
-   ```
-
-2. **For MongoDB Atlas (Cloud):**
-   ```env
-   PORT=5000
-   MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/task-manager?retryWrites=true&w=majority
+   MONGODB_URI=your_mongodb_connection_string
    NODE_ENV=development
    ```
 
 ---
 
-## Running the Server
+## Execution Commands
 
-**Development mode (with auto-reload):**
-```bash
-npm run dev
-```
-
-**Production mode:**
-```bash
-npm run node
-```
-
-Server will start on `http://localhost:5000`
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Starts the development server with hot-reloading |
+| `npm run node` | Starts the production server |
+| `npm test` | Executes the complete Jest test suite |
+| `npm run test:watch` | Runs tests in watch mode for active development |
 
 ---
 
-## API Endpoints
+## API Documentation
 
 ### Base URL
-```
-http://localhost:5000
-```
+`http://localhost:5000/api`
 
 ### Endpoints
 
 | Method | Endpoint | Description |
-|--------|----------|-------------|
-| **GET** | `/` | Welcome message |
-| **GET** | `/api/tasks` | Get all tasks |
-| **GET** | `/api/tasks/:id` | Get a specific task |
-| **POST** | `/api/tasks` | Create a new task |
-| **PUT** | `/api/tasks/:id` | Update a task |
-| **DELETE** | `/api/tasks/:id` | Delete a task |
+| :--- | :--- | :--- |
+| **GET** | `/tasks` | Retrieve all tasks sorted by creation date |
+| **GET** | `/tasks/:id` | Fetch a single task by its unique ID |
+| **POST** | `/tasks` | Create a new task resource |
+| **PUT** | `/tasks/:id` | Update an existing task or toggle completion status |
+| **DELETE** | `/tasks/:id` | Permanently remove a task resource |
 
 ---
 
-## Request/Response Examples
+## Request and Response Schema
 
-### 1. Get All Tasks
-**Request:**
-```
-GET /api/tasks
-```
-
-**Response (200):**
+### Create Task
+**POST** `/api/tasks`
 ```json
 {
-  "success": true,
-  "count": 2,
-  "data": [
-    {
-      "_id": "507f1f77bcf86cd799439011",
-      "title": "Complete assignment",
-      "description": "Finish the backend API",
-      "completed": false,
-      "priority": "high",
-      "dueDate": "2026-04-10T00:00:00.000Z",
-      "createdAt": "2026-04-03T10:00:00.000Z",
-      "updatedAt": "2026-04-03T10:00:00.000Z",
-      "__v": 0
-    },
-    {
-      "_id": "507f1f77bcf86cd799439012",
-      "title": "Review code",
-      "description": "Code review for new features",
-      "completed": true,
-      "priority": "medium",
-      "dueDate": "2026-04-05T00:00:00.000Z",
-      "createdAt": "2026-04-02T14:30:00.000Z",
-      "updatedAt": "2026-04-02T15:00:00.000Z",
-      "__v": 0
-    }
-  ]
-}
-```
-
----
-
-### 2. Get Task by ID
-**Request:**
-```
-GET /api/tasks/507f1f77bcf86cd799439011
-```
-
-**Response (200):**
-```json
-{
-  "success": true,
-  "data": {
-    "_id": "507f1f77bcf86cd799439011",
-    "title": "Complete assignment",
-    "description": "Finish the backend API",
-    "completed": false,
-    "priority": "high",
-    "dueDate": "2026-04-10T00:00:00.000Z",
-    "createdAt": "2026-04-03T10:00:00.000Z",
-    "updatedAt": "2026-04-03T10:00:00.000Z"
-  }
-}
-```
-
-**Response (404):**
-```json
-{
-  "success": false,
-  "message": "Task not found"
-}
-```
-
----
-
-### 3. Create Task
-**Request:**
-```
-POST /api/tasks
-Content-Type: application/json
-
-{
-  "title": "Complete assignment",
-  "description": "Finish the backend API",
+  "title": "Implementation of Unit Tests",
+  "description": "Ensure 100% code coverage for the task controller",
   "priority": "high",
+  "category": "work",
   "dueDate": "2026-04-10"
 }
 ```
 
-**Response (201):**
+### Standard Response Format
 ```json
 {
   "success": true,
-  "message": "Task created successfully",
   "data": {
     "_id": "507f1f77bcf86cd799439011",
-    "title": "Complete assignment",
-    "description": "Finish the backend API",
+    "title": "Implementation of Unit Tests",
     "completed": false,
     "priority": "high",
-    "dueDate": "2026-04-10T00:00:00.000Z",
-    "createdAt": "2026-04-03T10:00:00.000Z",
-    "updatedAt": "2026-04-03T10:00:00.000Z"
-  }
-}
-```
-
-**Response (400):**
-```json
-{
-  "success": false,
-  "message": "Title is required"
-}
-```
-
----
-
-### 4. Update Task
-**Request:**
-```
-PUT /api/tasks/507f1f77bcf86cd799439011
-Content-Type: application/json
-
-{
-  "title": "Updated task",
-  "description": "Updated description",
-  "completed": true,
-  "priority": "medium",
-  "dueDate": "2026-04-15"
-}
-```
-
-**Response (200):**
-```json
-{
-  "success": true,
-  "message": "Task updated successfully",
-  "data": {
-    "_id": "507f1f77bcf86cd799439011",
-    "title": "Updated task",
-    "description": "Updated description",
-    "completed": true,
-    "priority": "medium",
-    "dueDate": "2026-04-15T00:00:00.000Z",
-    "createdAt": "2026-04-03T10:00:00.000Z",
-    "updatedAt": "2026-04-03T12:00:00.000Z"
+    "category": "work",
+    "createdAt": "2026-04-03T10:00:00Z"
   }
 }
 ```
 
 ---
 
-### 5. Delete Task
-**Request:**
-```
-DELETE /api/tasks/507f1f77bcf86cd799439011
-```
+## Project Architecture
 
-**Response (200):**
-```json
-{
-  "success": true,
-  "message": "Task deleted successfully",
-  "data": {
-    "_id": "507f1f77bcf86cd799439011",
-    "title": "Complete assignment",
-    "description": "Finish the backend API",
-    "completed": false,
-    "priority": "high"
-  }
-}
-```
-
----
-
-## Project Structure
-
-```
+```text
 backend/
 ├── src/
-│   ├── app.js                    # Express app setup & middleware
-│   ├── server.js                 # Server entry point
-│   ├── config/
-│   │   └── db.js                # MongoDB connection
-│   ├── controllers/
-│   │   └── task.controller.js   # Task business logic
-│   ├── models/
-│   │   └── task.model.js        # Task MongoDB schema
-│   └── routes/
-│       └── routes.js            # API endpoints
-├── .env                          # Environment variables
-├── .gitignore                    # Git ignore file
-├── package.json                  # Dependencies & scripts
-└── README.md                     # This file
+│   ├── app.js               # Express application and middleware configuration
+│   ├── server.js            # Entry point for the Node.js server
+│   ├── config/              # Infrastructure configuration (Database)
+│   ├── controllers/         # Core business logic handlers
+│   ├── models/              # MongoDB data schemas
+│   └── routes/              # Routing definitions
+├── tests/                   # Automated test suites
+├── .env                     # Environment-specific configuration
+├── package.json             # Project manifest and scripts
+└── README.md                # System documentation
 ```
 
 ---
 
-## Technologies
-
-- **Node.js** - JavaScript runtime
-- **Express.js** - Web framework (v5.2.1)
-- **MongoDB** - NoSQL database
-- **Mongoose** - MongoDB ODM (v9.3.3)
-- **Nodemon** - Development server with auto-reload
-- **Dotenv** - Environment variable management
-
----
-
-## Task Model Schema
+## Data Model Specification
 
 ```javascript
 {
-  title: String (required, max 100 chars),
-  description: String (max 500 chars),
-  completed: Boolean (default: false),
-  priority: String (enum: 'low', 'medium', 'high', default: 'medium'),
-  dueDate: Date,
-  createdAt: Date (automatic),
-  updatedAt: Date (automatic)
+  title: { type: String, required: true, maxlength: 100 },
+  description: { type: String, maxlength: 500 },
+  completed: { type: Boolean, default: false },
+  priority: { type: String, enum: ['low', 'medium', 'high'] },
+  category: { type: String, enum: ['work', 'personal', 'shopping', 'health', 'other'] },
+  dueDate: { type: Date },
+  timestamps: true // Tracks createdAt and updatedAt automatically
 }
 ```
 
 ---
 
-## Error Handling
+## Verification and Testing
 
-The API returns appropriate HTTP status codes:
+This system implements automated unit and integration testing to ensure API stability.
+- **Test Location:** All test files are located in the `tests/` directory.
+- **HTTP Assertions:** Supertest is used for verifying endpoint responses.
 
-- **200** - Success (GET, PUT, DELETE)
-- **201** - Created (POST)
-- **400** - Bad Request (validation error)
-- **404** - Not Found (task not found)
-- **500** - Server Error
-
----
-
-## Testing with Postman
-
-1. Import the API endpoints into Postman
-2. Set the base URL: `http://localhost:5000`
-3. Test each endpoint with sample data
-4. Check responses and error handling
+To execute the test suite:
+```bash
+npm test
+```
 
 ---
 
-## Future Enhancements
+## Licensing
 
-- [ ] Add user authentication & authorization
-- [ ] Add task categories/tags
-- [ ] Add search and filter functionality
-- [ ] Add pagination for large task lists
-- [ ] Add task comments/notes
-- [ ] Add email notifications for due dates
-- [ ] Add export to CSV/PDF
+This project is released under the ISC License.
 
 ---
 
-## License
-
-ISC
-
----
-
-## Author
-
-[Your Name/Team]
-
----
-
-**Happy coding! 🚀**
+**Developed for enterprise-level task orchestration.**
