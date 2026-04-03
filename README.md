@@ -1,81 +1,178 @@
-﻿# Task Manager Application
+# Task Manager Backend API
 
-PR: NODEJSIIP-01909
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white)](https://jestjs.io/)
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg?style=for-the-badge)](https://opensource.org/licenses/ISC)
 
-This is a Node.js Task Management project using Express and MongoDB.
+A high-performance, RESTful API built with Express.js and MongoDB for mission-critical task management. This backend architecture supports full CRUD operations, advanced task tracking, and automated unit testing, designed with professional standards in mind.
 
-## Requirements Status
+---
 
-### Core Requirements
-- Create task with title and description: Completed
-- View all tasks: Completed
-- Mark task as completed: Completed (via PUT)
-- Edit task details: Completed
-- Delete task: Completed
-- Persistence with MongoDB: Completed
-- Title validation: Completed
-- Prevent re-completing an already completed task: Completed
-- Error handling with meaningful messages: Completed
-- README documentation: Completed
+## Technical Stack
 
-### Bonus Requirements
-- Due date: Completed
-- Task categorization: Completed
-- Unit tests: Completed
+- **Runtime Environment:** Node.js
+- **Web Framework:** Express.js (v5.2.1)
+- **Database Engine:** MongoDB with Mongoose ODM (v9.3.3)
+- **Testing Framework:** Jest and Supertest
+- **Configuration Management:** Dotenv
+- **Process Management:** Nodemon (Development only)
 
-## Project Structure
+---
 
-- backend/
-  - src/
-    - app.js
-    - server.js
-    - config/db.js
-    - models/task.model.js
-    - controllers/task.controller.js
-    - routes/routes.js
-  - tests/
-    - task.model.test.js
-    - task.api.test.js
-  - jest.config.js
-  - package.json
-- frontend/
-- README.md
+## Core Features
 
-## Backend Setup
+- **Resource Management** - Full CRUD capabilities for task entities.
+- **Priority Architecture** - Categorize tasks into low, medium, and high priority levels.
+- **Dynamic Categorization** - Tasks can be tagged as work, personal, shopping, health, or other.
+- **Deadline Management** - Integrated due date tracking for all tasks.
+- **Status Tracking** - Real-time monitoring of task completion status.
+- **Automated Timestamps** - Native MongoDB timestamping for audit trails.
+- **Schema Validation** - Robust server-side validation for data integrity.
+- **Automated Verification** - Comprehensive test suite leveraging Jest and Supertest.
 
-1. Go to backend folder:
+---
+
+## Quick Start Guide
+
+### Prerequisites
+- Node.js (v14 or higher)
+- MongoDB instance (Local or Atlas)
+
+### Installation
+
+1. **Navigate to the backend directory:**
+   ```bash
    cd backend
+   ```
 
-2. Install dependencies:
+2. **Install project dependencies:**
+   ```bash
    npm install
+   ```
 
-3. Add .env file:
+3. **Set up environment variables:**
+   Create a `.env` file in the root directory:
+   ```env
    PORT=5000
-   MONGODB_URI=mongodb://localhost:27017/task-manager
+   MONGODB_URI=your_mongodb_connection_string
+   NODE_ENV=development
+   ```
 
-4. Start server:
-   npm run dev
+---
 
-## API Endpoints
+## Execution Commands
 
-- GET /api/tasks
-- GET /api/tasks/:id
-- POST /api/tasks
-- PUT /api/tasks/:id
-- DELETE /api/tasks/:id
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Starts the development server with hot-reloading |
+| `npm run node` | Starts the production server |
+| `npm test` | Executes the complete Jest test suite |
+| `npm run test:watch` | Runs tests in watch mode for active development |
 
-## Test Commands
+---
 
-Run tests:
-- npm test
+## API Documentation
 
-Watch mode:
-- npm run test:watch
+### Base URL
+`http://localhost:5000/api`
 
-## Why Jest and Supertest?
+### Endpoints
 
-- Jest: test runner + assertions. It executes tests and checks expected values.
-- Supertest: HTTP testing helper for Express APIs. It sends fake requests to routes without starting a real server manually.
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| **GET** | `/tasks` | Retrieve all tasks sorted by creation date |
+| **GET** | `/tasks/:id` | Fetch a single task by its unique ID |
+| **POST** | `/tasks` | Create a new task resource |
+| **PUT** | `/tasks/:id` | Update an existing task or toggle completion status |
+| **DELETE** | `/tasks/:id` | Permanently remove a task resource |
 
-Both are used together because they solve different parts of API testing.
+---
 
+## Request and Response Schema
+
+### Create Task
+**POST** `/api/tasks`
+```json
+{
+  "title": "Implementation of Unit Tests",
+  "description": "Ensure 100% code coverage for the task controller",
+  "priority": "high",
+  "category": "work",
+  "dueDate": "2026-04-10"
+}
+```
+
+### Standard Response Format
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "507f1f77bcf86cd799439011",
+    "title": "Implementation of Unit Tests",
+    "completed": false,
+    "priority": "high",
+    "category": "work",
+    "createdAt": "2026-04-03T10:00:00Z"
+  }
+}
+```
+
+---
+
+## Project Architecture
+
+```text
+backend/
+├── src/
+│   ├── app.js               # Express application and middleware configuration
+│   ├── server.js            # Entry point for the Node.js server
+│   ├── config/              # Infrastructure configuration (Database)
+│   ├── controllers/         # Core business logic handlers
+│   ├── models/              # MongoDB data schemas
+│   └── routes/              # Routing definitions
+├── tests/                   # Automated test suites
+├── .env                     # Environment-specific configuration
+├── package.json             # Project manifest and scripts
+└── README.md                # System documentation
+```
+
+---
+
+## Data Model Specification
+
+```javascript
+{
+  title: { type: String, required: true, maxlength: 100 },
+  description: { type: String, maxlength: 500 },
+  completed: { type: Boolean, default: false },
+  priority: { type: String, enum: ['low', 'medium', 'high'] },
+  category: { type: String, enum: ['work', 'personal', 'shopping', 'health', 'other'] },
+  dueDate: { type: Date },
+  timestamps: true // Tracks createdAt and updatedAt automatically
+}
+```
+
+---
+
+## Verification and Testing
+
+This system implements automated unit and integration testing to ensure API stability.
+- **Test Location:** All test files are located in the `tests/` directory.
+- **HTTP Assertions:** Supertest is used for verifying endpoint responses.
+
+To execute the test suite:
+```bash
+npm test
+```
+
+---
+
+## Licensing
+
+This project is released under the ISC License.
+
+---
+
+**Developed for enterprise-level task orchestration.**
