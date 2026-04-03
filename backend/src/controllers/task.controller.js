@@ -46,7 +46,7 @@ export const getTaskById = async (req, res) => {
 // Create new task
 export const createTask = async (req, res) => {
     try {
-        const { title, description, priority, dueDate } = req.body;
+        const { title, description, priority, category, dueDate } = req.body;
         
         if (!title) {
             return res.status(400).json({
@@ -59,6 +59,7 @@ export const createTask = async (req, res) => {
             title,
             description,
             priority,
+            category,
             dueDate
         });
         
@@ -81,7 +82,7 @@ export const createTask = async (req, res) => {
 // Update task
 export const updateTask = async (req, res) => {
     try {
-        const { title, description, completed, priority, dueDate } = req.body;
+        const { title, description, completed, priority, category, dueDate } = req.body;
         
         const task = await Task.findById(req.params.id);
         
@@ -91,11 +92,19 @@ export const updateTask = async (req, res) => {
                 message: 'Task not found'
             });
         }
+
+        if (completed === true && task.completed === true) {
+            return res.status(400).json({
+                success: false,
+                message: 'Task is already marked as completed'
+            });
+        }
         
         if (title) task.title = title;
         if (description !== undefined) task.description = description;
         if (completed !== undefined) task.completed = completed;
         if (priority) task.priority = priority;
+        if (category) task.category = category;
         if (dueDate) task.dueDate = dueDate;
         
         await task.save();
